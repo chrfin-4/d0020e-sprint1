@@ -10,19 +10,25 @@ public class PlayerLook : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-    	Screen.lockCursor = true;
+        Cursor.lockState = CursorLockMode.Locked;
+    	//Screen.lockCursor = true;
     }
 
     // Update is called once per frame
     void Update()
     {	
-        
-		float rotLeftRight = Input.GetAxis("Mouse X") * sensitivity;
-		transform.Rotate(0, rotLeftRight, 0);
+        if (Input.GetKey(KeyCode.Space))
+            Cursor.lockState = Cursor.lockState == CursorLockMode.Locked ? CursorLockMode.None : CursorLockMode.Locked;
 
-		
-		verticalRotation -= Input.GetAxis("Mouse Y") * sensitivity;
-		verticalRotation = Mathf.Clamp(verticalRotation, -upDownRange, upDownRange);
-		Camera.main.transform.localRotation = Quaternion.Euler(verticalRotation, 0, 0);
+        if (Cursor.lockState == CursorLockMode.Locked)
+        {
+		    float rotLeftRight = Input.GetAxis("Mouse X") * sensitivity;
+		    transform.Rotate(0, rotLeftRight, 0);
+
+		    
+		    verticalRotation -= Input.GetAxis("Mouse Y") * sensitivity;
+		    verticalRotation = Mathf.Clamp(verticalRotation, -upDownRange, upDownRange);
+		    Camera.main.transform.localRotation = Quaternion.Euler(verticalRotation, 0, 0);
+        }
     }
 }

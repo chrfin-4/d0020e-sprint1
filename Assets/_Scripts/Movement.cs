@@ -17,20 +17,28 @@ public class Movement : MonoBehaviour
     void Start()
     {
         CC = GetComponent<CharacterController>();
-        Screen.lockCursor = true;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     // Update is called once per frame
     void Update()
     {
-        //Mouse Input
-		float rotLeftRight = Input.GetAxis("Mouse X") * sensitivity;
-		transform.Rotate(0, rotLeftRight, 0);
 
-		
-		verticalRotation -= Input.GetAxis("Mouse Y") * sensitivity;
-		verticalRotation = Mathf.Clamp(verticalRotation, -upDownRange, upDownRange);
-		Camera.main.transform.localRotation = Quaternion.Euler(verticalRotation, 0, 0);
+        // Lock/unlock cursor
+        if (Input.GetKey(KeyCode.Space))
+            Cursor.lockState = Cursor.lockState == CursorLockMode.Locked ? CursorLockMode.None : CursorLockMode.Locked;
+
+        //Mouse Input
+        if (Cursor.lockState == CursorLockMode.Locked)
+        {
+		    float rotLeftRight = Input.GetAxis("Mouse X") * sensitivity;
+		    transform.Rotate(0, rotLeftRight, 0);
+
+		    
+		    verticalRotation -= Input.GetAxis("Mouse Y") * sensitivity;
+		    verticalRotation = Mathf.Clamp(verticalRotation, -upDownRange, upDownRange);
+		    Camera.main.transform.localRotation = Quaternion.Euler(verticalRotation, 0, 0);
+        }
 
 		//WASD Movement
 
