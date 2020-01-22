@@ -17,7 +17,7 @@ public class Movement : MonoBehaviour
     void Start()
     {
         CC = GetComponent<CharacterController>();
-        Screen.lockCursor = true;
+        Cursor.visible = false;
     }
 
     // Update is called once per frame
