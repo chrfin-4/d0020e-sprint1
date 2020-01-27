@@ -5,6 +5,7 @@ using UnityEngine;
 public class TeleportArea : MonoBehaviour
 {
     bool isVisible = false;
+//    bool sizeFlip = true;
 
     // Start is called before the first frame update
     void Start()
@@ -15,6 +16,22 @@ public class TeleportArea : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+/*
+        if (transform.localScale.x > 5 || transform.localScale.x < 1)
+        {
+            sizeFlip = !sizeFlip;
+        }
+
+        if (sizeFlip) {
+            transform.localScale = new Vector3(transform.localScale.x + 0.2f, transform.localScale.y, transform.localScale.z);
+        }
+        else
+        {
+            transform.localScale = new Vector3(transform.localScale.x - 0.2f, transform.localScale.y, transform.localScale.z);
+        }
+*/
+
         if (Input.GetMouseButton(1)) // RMB
         {
             RaycastHit hit;
