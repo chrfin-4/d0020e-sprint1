@@ -12,6 +12,8 @@ public class NetworkingController : MonoBehaviourPunCallbacks
     private string roomName;
     private int inRoom = 0;
     private List <GameObject> buttons = new List<GameObject>();
+    private List <GameObject> art;
+    private GameObject personCam;
     public Camera standby;
     public Canvas canvas;
     public GameObject UIButton;
@@ -19,6 +21,7 @@ public class NetworkingController : MonoBehaviourPunCallbacks
     //Photon and unity Functions
     void Start()
     {
+        setupCanvas();
         CreateRoomButton("Create Button");
         Connect();
     }
@@ -69,10 +72,17 @@ public class NetworkingController : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom() 
     {
     	Debug.Log("Joined Room");
+        foreach(var button in buttons)
+        {
+            Destroy(button);
+        }
         inRoom = 1;
-        //Debug.Log("InLobby: " + PhotonNetwork.NetworkingClient.InLobby.ToString() );
     	SpawnPerson();
 
+    }
+    public override void OnPlayerEnteredRoom(Player newplayer)
+    {
+        
     }
 
     public override void OnDisconnected(DisconnectCause cause)
@@ -84,6 +94,12 @@ public class NetworkingController : MonoBehaviourPunCallbacks
 
 
     //Other Functions
+    void setupCanvas()
+    {
+        Debug.Log("Ping!");
+        canvas.worldCamera = standby;
+    }
+
     void CreatePhotonRoom()
     {
     	RoomOptions options = new RoomOptions() {IsVisible = true, IsOpen = true, MaxPlayers = 10};
@@ -96,7 +112,8 @@ public class NetworkingController : MonoBehaviourPunCallbacks
     {
     	GameObject ClientPerson = PhotonNetwork.Instantiate("Person", Vector3.zero, Quaternion.identity, 0);
     	ClientPerson.GetComponent<Movement>().enabled = true;
-    	ClientPerson.transform.Find("Main Camera").gameObject.SetActive(true);
+    	personCam = ClientPerson.transform.Find("Main Camera").gameObject;
+        personCam.gameObject.SetActive(true);
         standby.gameObject.SetActive(false);
 
     }
@@ -111,12 +128,12 @@ public class NetworkingController : MonoBehaviourPunCallbacks
         buttonObject.transform.SetParent(canvas.transform, false);
         button.onClick.AddListener(() => CreatePhotonRoom());
 
-
+        Debug.Log("Button pos: " + button.transform.position);
         buttons.Add(buttonObject);
         Debug.Log("Buttons: " + buttons.ToString() );
     }
 
-    void JoinRoomButton(string roomID)
+    void JoinRoomButton(string roomID, int posFactor)
     {
         var buttonObject = Instantiate(UIButton);
         Button button = (Button)buttonObject.GetComponent("Button");
@@ -125,7 +142,11 @@ public class NetworkingController : MonoBehaviourPunCallbacks
         buttonTextChildComponent.text = "Join Room " + roomID;
         button.transform.SetParent(canvas.transform, false);
         button.onClick.AddListener(() => PhotonNetwork.JoinRoom(roomID));
-
+        
+        Vector3 pos = new Vector3(80.0f , 30.0f * (posFactor + 2.0f), 0.0f);
+        buttonObject.transform.position = pos;
+        Debug.Log("Pos: " + pos.ToString() + " Join pos: " + button.transform.position.ToString() );
+        
         buttons.Add(buttonObject);
         Debug.Log("Buttons: " + buttons.ToString() );
     }
@@ -145,7 +166,7 @@ public class NetworkingController : MonoBehaviourPunCallbacks
                 {
                     for(int i = 0; i < numberOfRooms; i++)
                     {  
-                        JoinRoomButton(rooms[i].Name);
+                        JoinRoomButton(rooms[i].Name, i);
                     }
                 }
             }
