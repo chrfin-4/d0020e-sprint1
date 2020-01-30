@@ -22,7 +22,7 @@ public class NetworkingController : MonoBehaviourPunCallbacks
     void Start()
     {
         setupCanvas();
-        CreateRoomButton("Create Button");
+        //CreateRoomButton("Create Button");
         Connect();
     }
 
@@ -42,13 +42,15 @@ public class NetworkingController : MonoBehaviourPunCallbacks
     {
     	Debug.Log("Connected to master server");
     	PhotonNetwork.AutomaticallySyncScene = true;
-        PhotonNetwork.JoinLobby();
+        PhotonNetwork.JoinRandomRoom();
+        //PhotonNetwork.JoinLobby();
     }
 
     public override void OnJoinedLobby()
     {
         Debug.Log("Joined Lobby");
         Debug.Log("InLobby: "+ PhotonNetwork.InLobby.ToString() );
+        CreatePhotonRoom();
     }
 
     public override void OnJoinRandomFailed(short returncode, string message) //No rooms are visible or available

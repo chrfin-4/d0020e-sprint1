@@ -14,10 +14,22 @@ public class ControllerInputHandler : MonoBehaviour
     void Update()
     {
         OVRInput.Update();
-        float trigger = OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger);
+        // Reads the right controller trigger button
+        var trigger = OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger, OVRInput.Controller.Touch);
 
-        GetComponent<Renderer>().material.color = new Color(255 - trigger * 25, 255 - trigger * 25, 255);
-        
+        // Changes the color of the right hand on click
+        var colorVal = (int)(255.0 - trigger * 255.0);
+
+        GetComponent<Renderer>().material.color = new Color(colorVal, 255, 255);
+  
+        if(trigger > 0.9){
+        	if(Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward))){
+	        	Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * 1000, Color.yellow, 1);
+	        }
+	        else{
+	        	Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * 1000, Color.red, 1);
+	        }
+        }
     }
 
     void FixedUpdate()
