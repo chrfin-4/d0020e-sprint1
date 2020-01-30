@@ -3,21 +3,29 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
+using UnityEngine.UI;
 
 public class NetworkingController : MonoBehaviourPunCallbacks
 {
     //Variables
     private List <RoomInfo> rooms;
     private string roomName;
-    public Camera standby;
     private int inRoom = 0;
-
-
-
+    private List <GameObject> buttons = new List<GameObject>();
+    public Camera standby;
+    public Canvas canvas;
+    public GameObject UIButton;
+    
     //Photon and unity Functions
     void Start()
     {
+        CreateRoomButton("Create Button");
         Connect();
+    }
+
+    void Update()
+    {
+        //DisplayRooms();
     }
 
     void Connect() //Connect To Photon server via AppID ('UsingSettings')
@@ -55,6 +63,7 @@ public class NetworkingController : MonoBehaviourPunCallbacks
     public override void OnRoomListUpdate(List <RoomInfo> roomList)
     {
         rooms = roomList;
+        DisplayRooms();
     }
 
     public override void OnJoinedRoom() 
@@ -75,43 +84,6 @@ public class NetworkingController : MonoBehaviourPunCallbacks
 
 
     //Other Functions
-    void OnGUI()
-    {
-     
-
-       
-        if(inRoom == 0)
-        {
-            //Button to create room in current lobby
-            if(GUI.Button(new Rect (100, 100, 200, 50), "Create Room"))
-            {
-                CreatePhotonRoom();
-            }
-
-             //List all rooms in current lobby with button interraction to join
-            int numberOfRooms = 0;
-            if(rooms != null)
-            {
-                foreach(var room in rooms)
-                {
-                    numberOfRooms += 1;
-                }
-                if(numberOfRooms != 0)
-                {
-                    for(int i = 0; i < numberOfRooms; i++)
-                    {  
-                        if (GUI.Button(new Rect (100, 50 + (50 * (i + 2)), 200, 50), "Join Game" + rooms[i].Name.ToString() ))
-                        {
-                            Debug.Log("Room: " + rooms[i].ToString() );
-                            Debug.Log("Joining: " + rooms[i].Name.ToString() );
-                            PhotonNetwork.JoinRoom(rooms[i].Name);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     void CreatePhotonRoom()
     {
     	RoomOptions options = new RoomOptions() {IsVisible = true, IsOpen = true, MaxPlayers = 10};
@@ -127,5 +99,56 @@ public class NetworkingController : MonoBehaviourPunCallbacks
     	ClientPerson.transform.Find("Main Camera").gameObject.SetActive(true);
         standby.gameObject.SetActive(false);
 
+    }
+    
+    void CreateRoomButton(string buttonText)
+    {
+        GameObject buttonObject = Instantiate(UIButton);
+        Button button = (Button)buttonObject.GetComponent("Button");
+        var buttonTextChild = buttonObject.transform.GetChild(0);
+        Text buttonTextChildComponent = (Text)buttonTextChild.GetComponent("Text");
+        buttonTextChildComponent.text = "Create Room";
+        buttonObject.transform.SetParent(canvas.transform, false);
+        button.onClick.AddListener(() => CreatePhotonRoom());
+
+
+        buttons.Add(buttonObject);
+        Debug.Log("Buttons: " + buttons.ToString() );
+    }
+
+    void JoinRoomButton(string roomID)
+    {
+        var buttonObject = Instantiate(UIButton);
+        Button button = (Button)buttonObject.GetComponent("Button");
+        var buttonTextChild = buttonObject.transform.GetChild(0);
+        Text buttonTextChildComponent = (Text)buttonTextChild.GetComponent("Text");
+        buttonTextChildComponent.text = "Join Room " + roomID;
+        button.transform.SetParent(canvas.transform, false);
+        button.onClick.AddListener(() => PhotonNetwork.JoinRoom(roomID));
+
+        buttons.Add(buttonObject);
+        Debug.Log("Buttons: " + buttons.ToString() );
+    }
+
+    void DisplayRooms()
+    {
+        if(inRoom == 0)
+        {
+            int numberOfRooms = 0;
+            if(rooms != null)
+            {
+                foreach(var room in rooms)
+                {
+                    numberOfRooms += 1;
+                }
+                if(numberOfRooms != 0)
+                {
+                    for(int i = 0; i < numberOfRooms; i++)
+                    {  
+                        JoinRoomButton(rooms[i].Name);
+                    }
+                }
+            }
+        }
     }
 }
