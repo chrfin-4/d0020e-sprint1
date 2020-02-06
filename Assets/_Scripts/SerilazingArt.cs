@@ -23,7 +23,7 @@ public class SerilazingArt : MonoBehaviourPunCallbacks
     void AssetRPC(byte[] file, string pos, string filename)
     {
         Debug.Log("Här kommer Data!!!");
-        string pathRoot = @"C:\Users\tompa\Downloads";
+        string pathRoot = "";
         File.WriteAllBytes(pathRoot + filename, file);
         Sprite MySprite = IMG2Sprite.instance.LoadNewSprite(pathRoot + filename);
         Debug.Log("Sprite Loaded!");
