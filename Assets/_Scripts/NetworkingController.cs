@@ -12,11 +12,11 @@ public class NetworkingController : MonoBehaviourPunCallbacks
     private string roomName;
     private int inRoom = 0;
     private List <GameObject> buttons = new List<GameObject>();
-    private List <GameObject> art;
     private GameObject personCam;
     public Camera standby;
     public Canvas canvas;
     public GameObject UIButton;
+    private GameObject ClientPerson;
     
     //Photon and unity Functions
     void Start()
@@ -24,11 +24,6 @@ public class NetworkingController : MonoBehaviourPunCallbacks
         setupCanvas();
         CreateRoomButton("Create Button");
         Connect();
-    }
-
-    void Update()
-    {
-        //DisplayRooms();
     }
 
     void Connect() //Connect To Photon server via AppID ('UsingSettings')
@@ -69,6 +64,8 @@ public class NetworkingController : MonoBehaviourPunCallbacks
         DisplayRooms();
     }
 
+
+    //On joined room destroy buttons and instantiates player prefab
     public override void OnJoinedRoom() 
     {
     	Debug.Log("Joined Room");
@@ -78,10 +75,14 @@ public class NetworkingController : MonoBehaviourPunCallbacks
         }
         inRoom = 1;
     	SpawnPerson();
-
     }
     public override void OnPlayerEnteredRoom(Player newplayer)
     {
+        if(PhotonNetwork.IsMasterClient)
+        {
+            Debug.Log("New Player: " + newplayer.ToString() );
+            ClientPerson.GetComponent<SerilazingArt>().ExportAssets();
+        }
         
     }
 
@@ -94,9 +95,10 @@ public class NetworkingController : MonoBehaviourPunCallbacks
 
 
     //Other Functions
+
+    //Setting up canvas which is necessary for world gui to work, essential for VR
     void setupCanvas()
     {
-        Debug.Log("Ping!");
         canvas.worldCamera = standby;
     }
 
@@ -110,7 +112,7 @@ public class NetworkingController : MonoBehaviourPunCallbacks
 
     void SpawnPerson() //Spawn person and activating movement script and main camera locally
     {
-    	GameObject ClientPerson = PhotonNetwork.Instantiate("Person", Vector3.zero, Quaternion.identity, 0);
+    	ClientPerson = PhotonNetwork.Instantiate("Person", Vector3.zero, Quaternion.identity, 0);
     	ClientPerson.GetComponent<Movement>().enabled = true;
     	personCam = ClientPerson.transform.Find("Main Camera").gameObject;
         personCam.gameObject.SetActive(true);
@@ -128,9 +130,7 @@ public class NetworkingController : MonoBehaviourPunCallbacks
         buttonObject.transform.SetParent(canvas.transform, false);
         button.onClick.AddListener(() => CreatePhotonRoom());
 
-        Debug.Log("Button pos: " + button.transform.position);
         buttons.Add(buttonObject);
-        Debug.Log("Buttons: " + buttons.ToString() );
     }
 
     void JoinRoomButton(string roomID, int posFactor)
@@ -145,10 +145,8 @@ public class NetworkingController : MonoBehaviourPunCallbacks
         
         Vector3 pos = new Vector3(80.0f , 30.0f * (posFactor + 2.0f), 0.0f);
         buttonObject.transform.position = pos;
-        Debug.Log("Pos: " + pos.ToString() + " Join pos: " + button.transform.position.ToString() );
         
         buttons.Add(buttonObject);
-        Debug.Log("Buttons: " + buttons.ToString() );
     }
 
     void DisplayRooms()
@@ -171,5 +169,10 @@ public class NetworkingController : MonoBehaviourPunCallbacks
                 }
             }
         }
+    }
+
+    void LeaveRoom()
+    {
+
     }
 }
