@@ -14,6 +14,8 @@ GameObject:
   - component: {fileID: 4964693415692871969}
   - component: {fileID: 7184018691939853842}
   - component: {fileID: -3774763160896360327}
+  - component: {fileID: 345822132207018630}
+  - component: {fileID: 7330514308514128153}
   m_Layer: 0
   m_Name: Person
   m_TagString: Untagged
@@ -122,6 +124,30 @@ MonoBehaviour:
   m_SynchronizePosition: 1
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
+--- !u!114 &345822132207018630
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 458044455560870957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad2fef796ea6c2944ac94a21ea2a09a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7330514308514128153
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 458044455560870957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ba7f60bfc497a94eb88649d74697746, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1197920089337047361
 GameObject:
   m_ObjectHideFlags: 0
