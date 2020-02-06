@@ -22,7 +22,6 @@ public class NetworkingController : MonoBehaviourPunCallbacks
     void Start()
     {
         setupCanvas();
-        CreateRoomButton("Create Button");
         Connect();
     }
 
@@ -69,19 +68,18 @@ public class NetworkingController : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom() 
     {
     	Debug.Log("Joined Room");
-        foreach(var button in buttons)
-        {
-            Destroy(button);
-        }
         inRoom = 1;
     	SpawnPerson();
+        if(PhotonNetwork.IsMasterClient)
+        {
+            ClientPerson.GetComponent<SerilazingArt>().ExportAssets();
+        }
     }
     public override void OnPlayerEnteredRoom(Player newplayer)
     {
         if(PhotonNetwork.IsMasterClient)
         {
             Debug.Log("New Player: " + newplayer.ToString() );
-            ClientPerson.GetComponent<SerilazingArt>().ExportAssets();
         }
         
     }
@@ -151,8 +149,13 @@ public class NetworkingController : MonoBehaviourPunCallbacks
 
     void DisplayRooms()
     {
+        foreach(var button in buttons)
+        {
+            Destroy(button);
+        }
         if(inRoom == 0)
         {
+            CreateRoomButton("Create Button");
             int numberOfRooms = 0;
             if(rooms != null)
             {
