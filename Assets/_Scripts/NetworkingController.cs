@@ -13,14 +13,23 @@ public class NetworkingController : MonoBehaviourPunCallbacks
     private int inRoom = 0;
     private List <GameObject> buttons = new List<GameObject>();
     private GameObject personCam;
-    public Camera standby;
+
+    public Camera WASDStandby;
+    public Camera VRLeftStandby;
+    public Camera VRRightStandby;
+    public Camera VRCenterCamera;
+
+    public Transform Cube;
+
     public Canvas canvas;
     public GameObject UIButton;
     private GameObject ClientPerson;
     
+    private int usingVR = 1;
     //Photon and unity Functions
     void Start()
     {
+        VRCheck();
         setupCanvas();
         Connect();
     }
@@ -43,6 +52,7 @@ public class NetworkingController : MonoBehaviourPunCallbacks
     {
         Debug.Log("Joined Lobby");
         Debug.Log("InLobby: "+ PhotonNetwork.InLobby.ToString() );
+        DisplayRooms();
     }
 
     public override void OnJoinRandomFailed(short returncode, string message) //No rooms are visible or available
@@ -93,11 +103,32 @@ public class NetworkingController : MonoBehaviourPunCallbacks
 
 
     //Other Functions
+    void VRCheck()
+    {
+        if(usingVR == 1)
+        {
+            VRLeftStandby.gameObject.SetActive(true);
+            VRRightStandby.gameObject.SetActive(true);
+            if(VRRightStandby.gameObject.activeSelf == true)
+            {
+               //Instantiate(Cube, VRLeftStandby.gameObject.transform.position + new Vector3(20,20,20), Quaternion.identity);
+            }
+        }else
+        {
+            WASDStandby.gameObject.SetActive(true);
+        }
+    }
 
     //Setting up canvas which is necessary for world gui to work, essential for VR
     void setupCanvas()
     {
-        canvas.worldCamera = standby;
+        if(usingVR == 1)
+        {
+            canvas.worldCamera = VRLeftStandby;
+        }else
+        {
+            canvas.worldCamera = WASDStandby;
+        }
     }
 
     void CreatePhotonRoom()
@@ -110,11 +141,24 @@ public class NetworkingController : MonoBehaviourPunCallbacks
 
     void SpawnPerson() //Spawn person and activating movement script and main camera locally
     {
-    	ClientPerson = PhotonNetwork.Instantiate("Person", Vector3.zero, Quaternion.identity, 0);
-    	ClientPerson.GetComponent<Movement>().enabled = true;
-    	personCam = ClientPerson.transform.Find("Main Camera").gameObject;
-        personCam.gameObject.SetActive(true);
-        standby.gameObject.SetActive(false);
+        WASDStandby.gameObject.SetActive(false);
+        VRLeftStandby.gameObject.SetActive(false);
+        VRRightStandby.gameObject.SetActive(false);
+        VRCenterCamera.gameObject.SetActive(false);
+        if(usingVR == 1)
+        {
+    	    ClientPerson = PhotonNetwork.Instantiate("Person", Vector3.zero, Quaternion.identity, 0);
+            ClientPerson.GetComponent<Movement>().enabled = true;
+            personCam = ClientPerson.transform.Find("Main Camera").gameObject;
+            personCam.SetActive(true);
+            
+        }else
+        {
+            ClientPerson = PhotonNetwork.Instantiate("VRPerson", Vector3.zero, Quaternion.identity,0);
+            personCam = ClientPerson.transform.Find("TrackingSpace").gameObject;
+            personCam.SetActive(true);
+        }
+
 
     }
     
@@ -127,6 +171,7 @@ public class NetworkingController : MonoBehaviourPunCallbacks
         buttonTextChildComponent.text = "Create Room";
         buttonObject.transform.SetParent(canvas.transform, false);
         button.onClick.AddListener(() => CreatePhotonRoom());
+        //MeshCollider ButtonCollider = buttonObject.AddComponent( typeof(MeshCollider) ) as MeshCollider;
 
         buttons.Add(buttonObject);
     }
@@ -140,7 +185,9 @@ public class NetworkingController : MonoBehaviourPunCallbacks
         buttonTextChildComponent.text = "Join Room " + roomID;
         button.transform.SetParent(canvas.transform, false);
         button.onClick.AddListener(() => PhotonNetwork.JoinRoom(roomID));
-        
+        //MeshCollider ButtonCollider = buttonObject.AddComponent( typeof(MeshCollider) ) as MeshCollider;
+
+
         Vector3 pos = new Vector3(80.0f , 30.0f * (posFactor + 2.0f), 0.0f);
         buttonObject.transform.position = pos;
         
@@ -155,6 +202,7 @@ public class NetworkingController : MonoBehaviourPunCallbacks
         }
         if(inRoom == 0)
         {
+            //Instantiate(Cube, VRLeftStandby.gameObject.transform.position + new Vector3(20,20,20), Quaternion.identity);
             CreateRoomButton("Create Button");
             int numberOfRooms = 0;
             if(rooms != null)
