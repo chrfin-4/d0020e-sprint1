@@ -30,7 +30,7 @@ public class ArtManifest
 public class SerilazingArt : MonoBehaviourPunCallbacks
 {
 
-    private static string root = "/home/finkn/d0020e/downloads";
+    private static string root = "d0020e/downloads";
     private Dictionary<Checksum,SlotSettings> slotSettings;
     private ArtRegistry artReg;
 
@@ -47,12 +47,11 @@ public class SerilazingArt : MonoBehaviourPunCallbacks
         DistributeManifest(room.GetManifest());
     }
 
-    // TODO: make private?
     // Invoked on visitors by master client.
     // Receives the manifest and checks if there are missing assets that need
     // to be requested.
     [PunRPC]
-    void ReceiveManifestRPC(byte[] manifest)
+    private void ReceiveManifestRPC(byte[] manifest)
     {
         // XXX: For testing. Visitor client has no assets.
         artReg = ArtRegistry.GetEmptyArtRegistry();
@@ -103,21 +102,19 @@ public class SerilazingArt : MonoBehaviourPunCallbacks
         return tmp;
     }
 
-    // TODO: make private?
     // Runs on master client (called by regular clients).
     [PunRPC]
-    void ExportArtAssetsRPC(byte[] checksums, PhotonMessageInfo info)
+    private void ExportArtAssetsRPC(byte[] checksums, PhotonMessageInfo info)
     {
         List<Checksum> missing = Util.DeserializeByteArray<List<Checksum>>(checksums);
         ExportArtAssets(missing, info.Sender);
     }
 
-    // TODO: make private?
     // Runs on regular client (called by master client).
     // Receive a single asset.
     // The byte array is the actual file contents.
     [PunRPC]
-    void ReceiveArtAssetRPC(byte[] asset)
+    private void ReceiveArtAssetRPC(byte[] asset)
     {
         Checksum checksum = Checksum.Compute(asset);
         if (!slotSettings.ContainsKey(checksum))
