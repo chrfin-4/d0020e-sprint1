@@ -68,7 +68,7 @@ public class SerilazingArt : MonoBehaviourPunCallbacks
                 // Use existing meta data from registry.
                 ss = slot.WithMeta(artReg.Get(checksum));
                 slotSettings.Add(checksum, ss);
-                string filename = slot.MetaData.AbsolutePath;
+                string filename = ss.MetaData.AbsolutePath;
                 Sprite MySprite = IMG2Sprite.instance.LoadNewSprite(filename);
                 // XXX: really name them/identify with a string?
                 string tag = "Tavla" + ss.SlotNumber.ToString();
