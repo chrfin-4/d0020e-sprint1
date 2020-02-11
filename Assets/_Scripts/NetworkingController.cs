@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class NetworkingController : MonoBehaviourPunCallbacks
 {
@@ -15,17 +16,15 @@ public class NetworkingController : MonoBehaviourPunCallbacks
     private GameObject personCam;
 
     public Camera WASDStandby;
-    public Camera VRLeftStandby;
-    public Camera VRRightStandby;
-    public Camera VRCenterCamera;
-
-    public Transform Cube;
+    public GameObject VRStandByCameraRig;
 
     public Canvas canvas;
+    public GameObject eventSystem;
+
     public GameObject UIButton;
     private GameObject ClientPerson;
     
-    private int usingVR = 1;
+    private int usingVR = 0;
     //Photon and unity Functions
     void Start()
     {
@@ -82,7 +81,7 @@ public class NetworkingController : MonoBehaviourPunCallbacks
     	SpawnPerson();
         if(PhotonNetwork.IsMasterClient)
         {
-            ClientPerson.GetComponent<SerilazingArt>().ExportAssets();
+            ClientPerson.GetComponent<ArtHandling>().ExportAssets();
         }
     }
     public override void OnPlayerEnteredRoom(Player newplayer)
@@ -105,17 +104,21 @@ public class NetworkingController : MonoBehaviourPunCallbacks
     //Other Functions
     void VRCheck()
     {
+        eventSystem.GetComponent<OVRInputModule>().enabled = false;
+        eventSystem.GetComponent<StandaloneInputModule>().enabled = false;
+        canvas.GetComponent<OVRRaycaster>().enabled = false;
+        canvas.GetComponent<GraphicRaycaster>().enabled = false;
         if(usingVR == 1)
         {
-            VRLeftStandby.gameObject.SetActive(true);
-            VRRightStandby.gameObject.SetActive(true);
-            if(VRRightStandby.gameObject.activeSelf == true)
-            {
-               //Instantiate(Cube, VRLeftStandby.gameObject.transform.position + new Vector3(20,20,20), Quaternion.identity);
-            }
+            VRStandByCameraRig.gameObject.SetActive(true);
+            eventSystem.GetComponent<OVRInputModule>().enabled = true;
+            canvas.GetComponent<OVRRaycaster>().enabled = true;
         }else
         {
+            Debug.Log("Not using VR");
             WASDStandby.gameObject.SetActive(true);
+            canvas.GetComponent<GraphicRaycaster>().enabled = true;
+            eventSystem.GetComponent<StandaloneInputModule>().enabled = true;
         }
     }
 
@@ -124,7 +127,7 @@ public class NetworkingController : MonoBehaviourPunCallbacks
     {
         if(usingVR == 1)
         {
-            canvas.worldCamera = VRLeftStandby;
+            canvas.worldCamera = VRStandByCameraRig.transform.Find("TrackingSpace").transform.Find("CenterEyeAnchor").GetComponent<Camera>();
         }else
         {
             canvas.worldCamera = WASDStandby;
@@ -142,10 +145,8 @@ public class NetworkingController : MonoBehaviourPunCallbacks
     void SpawnPerson() //Spawn person and activating movement script and main camera locally
     {
         WASDStandby.gameObject.SetActive(false);
-        VRLeftStandby.gameObject.SetActive(false);
-        VRRightStandby.gameObject.SetActive(false);
-        VRCenterCamera.gameObject.SetActive(false);
-        if(usingVR == 1)
+        VRStandByCameraRig.gameObject.SetActive(false);
+        if(usingVR == 0)
         {
     	    ClientPerson = PhotonNetwork.Instantiate("Person", Vector3.zero, Quaternion.identity, 0);
             ClientPerson.GetComponent<Movement>().enabled = true;
@@ -154,7 +155,8 @@ public class NetworkingController : MonoBehaviourPunCallbacks
             
         }else
         {
-            ClientPerson = PhotonNetwork.Instantiate("VRPerson", Vector3.zero, Quaternion.identity,0);
+            ClientPerson = PhotonNetwork.Instantiate("VRPerson", new Vector3(0,3,0), Quaternion.identity,0);
+            ClientPerson.transform.Find("Capsule").gameObject.SetActive(false);
             personCam = ClientPerson.transform.Find("TrackingSpace").gameObject;
             personCam.SetActive(true);
         }
