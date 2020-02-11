@@ -75,7 +75,7 @@ public class RoomSettings
     {
         Dictionary<int,SlotSettings> settings = new Dictionary<int,SlotSettings>();
         ArtRegistry reg = ArtRegistry.GetArtRegistry();
-        int nr = 0;
+        int nr = 1;
         foreach (ArtMetaData meta in reg.GetAll())
         {
             settings.Add(nr, new SlotSettings(nr, meta));
@@ -177,7 +177,7 @@ public class ArtRegistry
     // XXX: Creates a hard-coded registry.
     static ArtRegistry()
     {
-        string path = "/home/finkn/d0020e/art/";
+        string path = "d0020e/art/";
         string artist = "Pixabay";
         string title1 = "beautiful-calm-clouds-dark-206359";
         string path1 = path + title1 + ".jpg";
