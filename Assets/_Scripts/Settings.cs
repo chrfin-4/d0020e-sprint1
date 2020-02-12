@@ -177,14 +177,14 @@ public class ArtRegistry
     // XXX: Creates a hard-coded registry.
     static ArtRegistry()
     {
-        string path = "d0020e/art/";
+        /*string path = "d0020e/art/";
         string artist = "Pixabay";
         string title1 = "beautiful-calm-clouds-dark-206359";
         string path1 = path + title1 + ".jpg";
         string title2 = "flight-landscape-nature-sky-36717";
         string path2 = path + title2 + ".jpg";
         instance.AddArt(title1, artist, path1, ArtType.Painting);
-        instance.AddArt(title2, artist, path2, ArtType.Painting);
+        instance.AddArt(title2, artist, path2, ArtType.Painting);*/
     }
 
     private ArtRegistry()

@@ -30,7 +30,7 @@ public class ArtManifest
 public class SerilazingArt : MonoBehaviourPunCallbacks
 {
 
-    private static string root = "d0020e/downloads";
+    private static string root = @"C:\Users\tompa\Downloads";
     private Dictionary<Checksum,SlotSettings> slotSettings;
     private ArtRegistry artReg;
 
