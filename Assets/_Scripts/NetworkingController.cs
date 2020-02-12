@@ -81,7 +81,8 @@ public class NetworkingController : MonoBehaviourPunCallbacks
     	SpawnPerson();
         if(PhotonNetwork.IsMasterClient)
         {
-            ClientPerson.GetComponent<ArtHandling>().ExportAssets();
+            RoomSettings room = RoomSettings.GetTestRoomSettings();
+            ClientPerson.GetComponent<SerilazingArt>().ExportArt(room);
         }
     }
     public override void OnPlayerEnteredRoom(Player newplayer)
