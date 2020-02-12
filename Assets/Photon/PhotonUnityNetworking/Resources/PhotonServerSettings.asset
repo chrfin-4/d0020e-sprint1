@@ -29,12 +29,11 @@ MonoBehaviour:
   RunInBackground: 1
   StartInOfflineMode: 0
   RpcList:
+  - AssetRPC
   - ClickRpc
   - DestroyRpc
-  - DestroySpaceship
-  - Fire
-  - RespawnSpaceship
-  - TestRPC
-  - AssetRPC
+  - ExportArtAssetsRPC
+  - ReceiveArtAssetRPC
+  - ReceiveManifestRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1

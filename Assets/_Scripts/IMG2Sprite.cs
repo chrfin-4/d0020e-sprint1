@@ -27,12 +27,16 @@ public class IMG2Sprite : MonoBehaviour {
         }
     }
 
-    public Sprite LoadNewSprite(string FilePath, float PixelsPerUnit = 100.0f, SpriteMeshType spriteType = SpriteMeshType.FullRect)
+    public Sprite LoadNewSprite(string FilePath, float PixelsPerUnit = 200.0f, SpriteMeshType spriteType = SpriteMeshType.FullRect)
     {
         // Load a PNG or JPG image from disk to a Texture2D, assign this texture to a new sprite and return its reference
         Texture2D SpriteTexture = LoadTexture(FilePath);
+        Debug.Log("Width: " + SpriteTexture.width.ToString() );
+        Debug.Log("Height: " + SpriteTexture.height.ToString() );
+        
         Sprite NewSprite = Sprite.Create(SpriteTexture, new Rect(0, 0, SpriteTexture.width, SpriteTexture.height), new Vector2(0, 0), PixelsPerUnit, 0, spriteType);
-
+        Debug.Log("Sprite Width: " + NewSprite.rect.width.ToString() );
+        Debug.Log("Sprite Height: " + NewSprite.rect.height.ToString() );
         return NewSprite;
     }
 
