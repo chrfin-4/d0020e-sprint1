@@ -177,7 +177,7 @@ public class ArtRegistry
     // XXX: Creates a hard-coded registry.
     static ArtRegistry()
     {
-        string path = "d0020e/art/";
+        string path = "art/";
         string artist = "Pixabay";
         string title1 = "beautiful-calm-clouds-dark-206359";
         string path1 = path + title1 + ".jpg";
