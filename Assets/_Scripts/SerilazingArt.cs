@@ -70,8 +70,7 @@ public class SerilazingArt : MonoBehaviourPunCallbacks
                 slotSettings.Add(checksum, ss);
                 string filename = ss.MetaData.AbsolutePath;
                 Sprite MySprite = IMG2Sprite.instance.LoadNewSprite(filename);
-                // XXX: really name them/identify with a string?
-                string tag = "Tavla" + ss.SlotNumber.ToString();
+                string tag = slotNrToTag(ss.SlotNumber);
                 SetSprite(tag, MySprite);
             } else
             {
@@ -88,19 +87,7 @@ public class SerilazingArt : MonoBehaviourPunCallbacks
             RequestArtAssets(missing);
     }
 
-    private List<Checksum> GetMissingSubset(ArtManifest manifest)
-    {
-        List<Checksum> tmp = new List<Checksum>();
-        foreach (SlotSettings slot in manifest.Slots)
-        {
-            Checksum checksum = slot.MetaData.Checksum;
-            if (!artReg.HasArt(checksum))
-            {
-                tmp.Add(checksum);
-            }
-        }
-        return tmp;
-    }
+    private string slotNrToTag(int slot) => "Tavla" + slot.ToString();
 
     // Runs on master client (called by regular clients).
     [PunRPC]
@@ -131,8 +118,7 @@ public class SerilazingArt : MonoBehaviourPunCallbacks
         Debug.Log("Showing sprite");
         string filename = slot.MetaData.AbsolutePath;
         Sprite MySprite = IMG2Sprite.instance.LoadNewSprite(filename);
-        // XXX: really name them/identify with a string?
-        string tag = "Tavla" + slot.SlotNumber.ToString();
+        string tag = slotNrToTag(slot.SlotNumber);
         SetSprite(tag, MySprite);
 
         // Transfer of asset complete.
