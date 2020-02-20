@@ -22,6 +22,7 @@ public class NetworkingController : MonoBehaviourPunCallbacks
     public GameObject eventSystem;
 
     public GameObject UIButton;
+
     private GameObject ClientPerson;
     
     private int usingVR = 0;
@@ -153,6 +154,7 @@ public class NetworkingController : MonoBehaviourPunCallbacks
     	    ClientPerson = PhotonNetwork.Instantiate("Person", Vector3.zero, Quaternion.identity, 0);
             ClientPerson.GetComponent<Movement>().enabled = true;
             personCam = ClientPerson.transform.Find("Main Camera").gameObject;
+            ClientPerson.transform.Find("Face").gameObject.SetActive(false);
             personCam.SetActive(true);
             personCam.GetComponent<AudioListener>().enabled = true;
             
@@ -164,6 +166,12 @@ public class NetworkingController : MonoBehaviourPunCallbacks
             personCam.SetActive(true);
             ClientPerson.GetComponent<Teleportation>().enabled = true;
             personCam.GetComponent<AudioListener>().enabled = true;
+        }
+        if(PhotonNetwork.IsMasterClient)
+        {
+           GameObject Hat = PhotonNetwork.Instantiate("ArtistHat", new Vector3(0,0,0), Quaternion.identity,0); 
+           Hat.transform.SetParent(ClientPerson.transform, false);
+           Hat.transform.position = new Vector3(0,0.7f,0);
         }
 
 
