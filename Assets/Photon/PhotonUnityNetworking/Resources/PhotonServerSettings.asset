@@ -15,7 +15,7 @@ MonoBehaviour:
   AppSettings:
     AppIdRealtime: ad3c4f4a-e70e-4872-8a2c-4c428182f2a0
     AppIdChat: 
-    AppIdVoice: 
+    AppIdVoice: 946087de-9336-4f33-88cb-54af5b0f6ae9
     AppVersion: 
     UseNameServer: 1
     FixedRegion: 
@@ -28,6 +28,13 @@ MonoBehaviour:
   EnableSupportLogger: 0
   RunInBackground: 1
   StartInOfflineMode: 0
-  RpcList: []
+  RpcList:
+  - AssetRPC
+  - ClickRpc
+  - DestroyRpc
+  - ExportArtAssetsRPC
+  - ReceiveArtAssetRPC
+  - ReceiveManifestRPC
+  - ChangeColour
   DisableAutoOpenWizard: 1
   ShowSettings: 1

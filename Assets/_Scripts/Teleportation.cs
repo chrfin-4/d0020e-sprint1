@@ -62,8 +62,7 @@ public class Teleportation : MonoBehaviour
             transform.localScale = new Vector3(transform.localScale.x - 0.2f, transform.localScale.y, transform.localScale.z);
         }
 */      OVRInput.Update();
-        OVRInput.RecenterController(OVRInput.Controller.RTouch);
-        OVRInput.RecenterController(OVRInput.Controller.LTouch);
+
 
         if (OVRInput.Get(RTrigger)) // RMB
         {

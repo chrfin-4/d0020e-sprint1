@@ -25,6 +25,7 @@ public class NetworkingController : MonoBehaviourPunCallbacks
     private GameObject ClientPerson;
     
     private int usingVR = 0;
+
     //Photon and unity Functions
     void Start()
     {
@@ -156,10 +157,11 @@ public class NetworkingController : MonoBehaviourPunCallbacks
             
         }else
         {
-            ClientPerson = PhotonNetwork.Instantiate("VRPerson", new Vector3(0,3,0), Quaternion.identity,0);
+            ClientPerson = PhotonNetwork.Instantiate("VRPerson", new Vector3(0,0,0), Quaternion.identity,0);
             ClientPerson.transform.Find("Capsule").gameObject.SetActive(false);
             personCam = ClientPerson.transform.Find("TrackingSpace").gameObject;
             personCam.SetActive(true);
+            ClientPerson.GetComponent<Teleportation>().enabled = true;
         }
 
 

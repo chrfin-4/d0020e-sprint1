@@ -30,7 +30,6 @@ public class ArtManifest
 public class SerilazingArt : MonoBehaviourPunCallbacks
 {
 
-    private static string root = @"C:\Users\tompa\Downloads";
     private Dictionary<Checksum,SlotSettings> slotSettings;
     private ArtRegistry artReg;
 
@@ -39,6 +38,9 @@ public class SerilazingArt : MonoBehaviourPunCallbacks
     // Invoked locally on master client from OnJoinedRoom.
     // Distribute full art manifest for the room to all visitors.
     // Perform RPC on all clients when they connect (targeting OthersBuffered).
+    private string DeclareRoot() {
+        return Application.persistentDataPath;
+    }
     public void ExportArt(RoomSettings room)
     {
         // XXX: For testing. Master client has the assets.
@@ -76,6 +78,8 @@ public class SerilazingArt : MonoBehaviourPunCallbacks
             {
                 Debug.Log("Visitor does NOT have art " + checksum.ToString());
                 missing.Add(checksum);
+                string root = DeclareRoot();
+                Debug.Log("Root2: " +  root);
                 ArtMetaData absolute = ss.MetaData.MakeAbsolutePath(root);
                 ss = slot.WithMeta(absolute);
                 slotSettings.Add(ss.MetaData.Checksum, ss);
