@@ -12,6 +12,8 @@ public class Movement : MonoBehaviour
 	public float upDownRange = 70.0f;
 	public float jump = 10.0f;
 	float grav = 0;
+
+	
     // Start is called before the first fr
     // Start is called before the first frame update
     void Start()
@@ -23,7 +25,14 @@ public class Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Mouse Input
+		Move();
+    }
+
+
+	//Own functions
+	void Move()
+	{
+		        //Mouse Input
 		float rotLeftRight = Input.GetAxis("Mouse X") * sensitivity;
 		transform.Rotate(0, rotLeftRight, 0);
 
@@ -41,5 +50,5 @@ public class Movement : MonoBehaviour
         moveVector = new Vector3(Input.GetAxis("Horizontal") * Time.deltaTime, grav, Input.GetAxis("Vertical") * Time.deltaTime);
         moveVector = transform.rotation * moveVector * speed;
         CC.Move(moveVector);
-    }
+	}
 }

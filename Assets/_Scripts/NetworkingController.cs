@@ -154,6 +154,7 @@ public class NetworkingController : MonoBehaviourPunCallbacks
             ClientPerson.GetComponent<Movement>().enabled = true;
             personCam = ClientPerson.transform.Find("Main Camera").gameObject;
             personCam.SetActive(true);
+            personCam.GetComponent<AudioListener>().enabled = true;
             
         }else
         {
@@ -162,6 +163,7 @@ public class NetworkingController : MonoBehaviourPunCallbacks
             personCam = ClientPerson.transform.Find("TrackingSpace").gameObject;
             personCam.SetActive(true);
             ClientPerson.GetComponent<Teleportation>().enabled = true;
+            personCam.GetComponent<AudioListener>().enabled = true;
         }
 
 
